@@ -6,8 +6,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import neuralnetwork.NeuralNetwork;
 import neuralnetwork.neuron.Neuron;
 import neuralnetwork.neuron.Synapse;
@@ -31,7 +31,8 @@ public class CsvWriter implements Closeable {
     public static final String EOL_LF = "\n";
     public static final String EOL_CRLF = "\r\n";
 
-    private final StringBuilder writer;
+    private final StringBuilder writer = new StringBuilder();
+    private final String path;
     private final char fieldSep;
     private final char quoteChar;
     private final String lineSep;
@@ -41,16 +42,16 @@ public class CsvWriter implements Closeable {
     private final String doubleQuoteCharStr;
     private final String quoteCharPattern;
 
-    public CsvWriter(StringBuilder writer) {
-        this(writer, FIELD_SEP_COMMA, QUOTE_DOUBLE, EOL_CRLF);
+    public CsvWriter(String path) {
+        this(path, FIELD_SEP_COMMA, QUOTE_DOUBLE, EOL_CRLF);
     }
 
-    public CsvWriter(StringBuilder writer, char fieldSeparator) {
-        this(writer, fieldSeparator, QUOTE_DOUBLE, EOL_CRLF);
+    public CsvWriter(String path, char fieldSeparator) {
+        this(path, fieldSeparator, QUOTE_DOUBLE, EOL_CRLF);
     }
 
-    public CsvWriter(StringBuilder writer, char fieldSeparator, char quoteChar, String lineSeparator) {
-        this.writer = writer;
+    public CsvWriter(String path, char fieldSeparator, char quoteChar, String lineSeparator) {
+        this.path = path;
         this.fieldSep = fieldSeparator;
         this.quoteChar = quoteChar;
         this.lineSep = lineSeparator;
@@ -85,15 +86,15 @@ public class CsvWriter implements Closeable {
      * Write row of values as CSV.
      *
      * @param neuralNetwork
-     * @throws java.io.IOException
      */
-    public void write(NeuralNetwork neuralNetwork) throws IOException {
+    public void write(NeuralNetwork neuralNetwork) {
 
-        String str = String.valueOf(neuralNetwork.inputNeurons.size()) + ' '
-                + neuralNetwork.hiddenNeurons.size() + ' '
+        String str = String.valueOf(neuralNetwork.inputNeurons.size()) + fieldSep
+                + neuralNetwork.hiddenNeurons.size() + fieldSep
                 + neuralNetwork.outputNeurons.size();
 
         writer.append(str);
+        writer.append(lineSep);
         writer.append(lineSep);
         boolean isFirst = true;
         for (Neuron value : neuralNetwork.inputNeurons) {
@@ -104,9 +105,16 @@ public class CsvWriter implements Closeable {
 
             if (value != null) {
 
-                for (Synapse synapse : value.getOutputsSynapse()) {
-                    writer.append(String.valueOf(synapse.getWeight()));
-                    writer.append(fieldSep);
+//                for (Synapse synapse : value.getOutputsSynapse()) {
+//                    writer.append(String.valueOf(synapse.getWeight()));
+//                    writer.append(fieldSep);
+//                    
+//                }
+                for (int i = 0; i < value.getOutputsSynapse().size(); i++) {
+                    writer.append(String.valueOf(value.getOutputsSynapse().get(i).getWeight()));
+                    if (i != value.getOutputsSynapse().size() - 1) {
+                        writer.append(fieldSep);
+                    }
                 }
                 writer.append(lineSep);
             }
@@ -115,18 +123,30 @@ public class CsvWriter implements Closeable {
         writer.append(lineSep);
         for (Neuron neuron : neuralNetwork.outputNeurons) {
             if (neuron != null) {
-                for (Synapse synapse : neuron.getInputsSynapse()) {
-                    writer.append(String.valueOf(synapse.getWeight()));
-                    writer.append(fieldSep);
+//                for (Synapse synapse : neuron.getInputsSynapse()) {
+//                    writer.append(String.valueOf(synapse.getWeight()));
+//                    writer.append(fieldSep);
+//                }
+                for (int i = 0; i < neuron.getInputsSynapse().size(); i++) {
+                    writer.append(String.valueOf(neuron.getInputsSynapse().get(i).getWeight()));
+                    if (i != neuron.getInputsSynapse().size() - 1) {
+                        writer.append(fieldSep);
+                    }
                 }
                 writer.append(lineSep);
             }
         }
         writer.append(lineSep);
-        File file = new File("network.csv");
-        PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(file)));
-        printWriter.print(writer.toString());
-        printWriter.flush();
+        File file = new File(path);
+        PrintWriter printWriter;
+        try {
+            printWriter = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+
+            printWriter.print(writer.toString());
+            printWriter.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(CsvWriter.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 

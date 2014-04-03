@@ -3,8 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package app;
+
+import javax.swing.JFileChooser;
+import neuralnetwork.NeuralNetwork;
+import neuralnetwork.ValuesList;
+import parser.*;
 
 /**
  *
@@ -12,11 +16,14 @@ package app;
  */
 public class Programm extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Programm
-     */
+    private NeuralNetwork neuralNetwork = null;
+
     public Programm() {
         initComponents();
+        jPanelTrainNetwork.setVisible(false);
+        jPanelTestingNetwork.setVisible(false);
+        jPanelNewNetwork.setVisible(false);
+
     }
 
     /**
@@ -28,21 +35,362 @@ public class Programm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jFileChooser = new javax.swing.JFileChooser();
+        jFileChooserSaveNet = new javax.swing.JFileChooser();
+        jPanel1 = new javax.swing.JPanel();
+        jPanelNewNetwork = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jTextFieldInputNeuron = new javax.swing.JTextField();
+        jTextFieldHiddenNeuron = new javax.swing.JTextField();
+        jTextFieldOutputNeuron = new javax.swing.JTextField();
+        jButtonCreateNeuron = new javax.swing.JButton();
+        jPanelTrainNetwork = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jTextFieldTrainCount = new javax.swing.JTextField();
+        jButtonTrain = new javax.swing.JButton();
+        jLabelMessage = new javax.swing.JLabel();
+        jPanelTestingNetwork = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jTextFieldInputString = new javax.swing.JTextField();
+        jButtonTestNetwork = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextAreaOutputString = new javax.swing.JTextArea();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItemNew = new javax.swing.JMenuItem();
+        jMenuItemOpen = new javax.swing.JMenuItem();
+        jMenuItemSave = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+
+        jFileChooser.setFileFilter(new MyFilter());
+        jFileChooser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFileChooserActionPerformed(evt);
+            }
+        });
+
+        jFileChooserSaveNet.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+        jFileChooserSaveNet.setDialogTitle("");
+        jFileChooserSaveNet.setFileFilter(new MyFilter());
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setText("Укажите количества:");
+
+        jLabel2.setText("Входные нейроны");
+
+        jLabel3.setText("Промежуточные нейроны");
+
+        jLabel4.setText("Выходные нейроны");
+
+        jButtonCreateNeuron.setText("Создать");
+        jButtonCreateNeuron.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCreateNeuronActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelNewNetworkLayout = new javax.swing.GroupLayout(jPanelNewNetwork);
+        jPanelNewNetwork.setLayout(jPanelNewNetworkLayout);
+        jPanelNewNetworkLayout.setHorizontalGroup(
+            jPanelNewNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelNewNetworkLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelNewNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addGroup(jPanelNewNetworkLayout.createSequentialGroup()
+                        .addGroup(jPanelNewNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel2))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelNewNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextFieldInputNeuron)
+                            .addComponent(jTextFieldHiddenNeuron)
+                            .addComponent(jTextFieldOutputNeuron)
+                            .addComponent(jButtonCreateNeuron, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanelNewNetworkLayout.setVerticalGroup(
+            jPanelNewNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelNewNetworkLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelNewNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextFieldInputNeuron, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelNewNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jTextFieldHiddenNeuron, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelNewNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jTextFieldOutputNeuron, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonCreateNeuron)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel5.setText("Обучение");
+
+        jLabel6.setText("Количество циклов");
+
+        jButtonTrain.setText("Обучить");
+        jButtonTrain.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonTrainActionPerformed(evt);
+            }
+        });
+
+        jLabelMessage.setText(" ");
+
+        javax.swing.GroupLayout jPanelTrainNetworkLayout = new javax.swing.GroupLayout(jPanelTrainNetwork);
+        jPanelTrainNetwork.setLayout(jPanelTrainNetworkLayout);
+        jPanelTrainNetworkLayout.setHorizontalGroup(
+            jPanelTrainNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTrainNetworkLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelTrainNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addGroup(jPanelTrainNetworkLayout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addGap(48, 48, 48)
+                        .addGroup(jPanelTrainNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButtonTrain, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                            .addComponent(jTextFieldTrainCount)))
+                    .addComponent(jLabelMessage))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanelTrainNetworkLayout.setVerticalGroup(
+            jPanelTrainNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTrainNetworkLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTrainNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jTextFieldTrainCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonTrain)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelMessage)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel7.setText("Тестирование нейронной сети");
+
+        jLabel8.setText("Введите входные значения через зяпятую");
+
+        jButtonTestNetwork.setText("Тестировать");
+        jButtonTestNetwork.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonTestNetworkActionPerformed(evt);
+            }
+        });
+
+        jTextAreaOutputString.setColumns(20);
+        jTextAreaOutputString.setRows(5);
+        jScrollPane1.setViewportView(jTextAreaOutputString);
+
+        javax.swing.GroupLayout jPanelTestingNetworkLayout = new javax.swing.GroupLayout(jPanelTestingNetwork);
+        jPanelTestingNetwork.setLayout(jPanelTestingNetworkLayout);
+        jPanelTestingNetworkLayout.setHorizontalGroup(
+            jPanelTestingNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTestingNetworkLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelTestingNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane1)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldInputString, javax.swing.GroupLayout.Alignment.LEADING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonTestNetwork, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(85, Short.MAX_VALUE))
+        );
+        jPanelTestingNetworkLayout.setVerticalGroup(
+            jPanelTestingNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTestingNetworkLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelTestingNetworkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldInputString, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonTestNetwork))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanelNewNetwork, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelTrainNetwork, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelTestingNetwork, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanelNewNetwork, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelTrainNetwork, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelTestingNetwork, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jMenu1.setText("Файл");
+
+        jMenuItemNew.setText("Новая сеть");
+        jMenuItemNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemNewActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemNew);
+
+        jMenuItemOpen.setText("Открыть");
+        jMenuItemOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemOpenActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemOpen);
+
+        jMenuItemSave.setText("Сохранить");
+        jMenuItemSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemSaveActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemSave);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Редактировать");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenuItemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOpenActionPerformed
+        int returnVal = jFileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            String path = jFileChooser.getSelectedFile().getAbsolutePath();
+
+        }
+    }//GEN-LAST:event_jMenuItemOpenActionPerformed
+
+    private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
+        if (neuralNetwork == null) {
+            return;
+        }
+        int returnVal = jFileChooserSaveNet.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            String path = jFileChooserSaveNet.getSelectedFile().getAbsolutePath();
+            if (path.endsWith(".xml")) {
+                XMLParser lParser = new XMLParser(path);
+                lParser.setNetwork(neuralNetwork);
+            } else if (path.endsWith(".csv")) {
+                CsvParser cp =new CsvParser(path);
+                cp.setNetwork(neuralNetwork);
+            }
+           
+        }
+    }//GEN-LAST:event_jMenuItemSaveActionPerformed
+
+    private void jMenuItemNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNewActionPerformed
+        jPanelNewNetwork.setVisible(true);
+        jPanelTrainNetwork.setVisible(false);
+        jPanelTestingNetwork.setVisible(false);
+    }//GEN-LAST:event_jMenuItemNewActionPerformed
+
+    private void jButtonCreateNeuronActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateNeuronActionPerformed
+        try {
+            int input = Integer.parseInt(jTextFieldInputNeuron.getText());
+            int hidden = Integer.parseInt(jTextFieldHiddenNeuron.getText());
+            int output = Integer.parseInt(jTextFieldOutputNeuron.getText());
+            if (input > 0 && hidden > 0 && output > 0) {
+                neuralNetwork = new NeuralNetwork(input, output, 1, hidden);
+                jButtonCreateNeuron.setEnabled(false);
+                jPanelTrainNetwork.setVisible(true);
+                jPanelTestingNetwork.setVisible(true);
+            }
+        } catch (NumberFormatException ex) {
+
+        }
+    }//GEN-LAST:event_jButtonCreateNeuronActionPerformed
+
+    private void jButtonTrainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTrainActionPerformed
+        try {
+            jLabelMessage.setText(" ");
+            int count = Integer.parseInt(jTextFieldTrainCount.getText());
+            if (count > 0) {
+                Program.testBool(neuralNetwork, count, 0.9);
+            }
+            jLabelMessage.setText("Обучение закончено");
+        } catch (NumberFormatException ex) {
+
+        }
+    }//GEN-LAST:event_jButtonTrainActionPerformed
+
+    private void jButtonTestNetworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestNetworkActionPerformed
+        jTextAreaOutputString.setText(" ");
+        String[] input = jTextFieldInputString.getText().split(",");
+        ValuesList inputs;
+        ValuesList outputs;
+        double o;
+        inputs = new ValuesList();
+        for (String string : input) {
+            try {
+                o = Double.valueOf(string);
+                inputs.add(o);
+            } catch (NumberFormatException ex) {
+                return;
+            }
+        }
+        outputs = neuralNetwork.calculateOutputs(inputs);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < outputs.size(); i++) {
+            stringBuilder.append(i).append(":-->").append(outputs.get(i).doubleValue()).append('\n');
+        }
+        jTextAreaOutputString.setText(stringBuilder.toString());
+
+    }//GEN-LAST:event_jButtonTestNetworkActionPerformed
+
+    private void jFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFileChooserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFileChooserActionPerformed
 
     /**
      * @param args the command line arguments
@@ -75,10 +423,43 @@ public class Programm extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Programm().setVisible(true);
+
             }
         });
     }
 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonCreateNeuron;
+    private javax.swing.JButton jButtonTestNetwork;
+    private javax.swing.JButton jButtonTrain;
+    private javax.swing.JFileChooser jFileChooser;
+    private javax.swing.JFileChooser jFileChooserSaveNet;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabelMessage;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItemNew;
+    private javax.swing.JMenuItem jMenuItemOpen;
+    private javax.swing.JMenuItem jMenuItemSave;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanelNewNetwork;
+    private javax.swing.JPanel jPanelTestingNetwork;
+    private javax.swing.JPanel jPanelTrainNetwork;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextAreaOutputString;
+    private javax.swing.JTextField jTextFieldHiddenNeuron;
+    private javax.swing.JTextField jTextFieldInputNeuron;
+    private javax.swing.JTextField jTextFieldInputString;
+    private javax.swing.JTextField jTextFieldOutputNeuron;
+    private javax.swing.JTextField jTextFieldTrainCount;
     // End of variables declaration//GEN-END:variables
 }

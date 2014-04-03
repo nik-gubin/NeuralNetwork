@@ -221,7 +221,7 @@ public class XMLParser implements NetworkParser {
                 root.appendChild(output);
             }
 
-            TransformerFactory.newInstance().newTransformer().transform(new DOMSource(doc), new StreamResult(new File("as.xml")));
+            TransformerFactory.newInstance().newTransformer().transform(new DOMSource(doc), new StreamResult(new File(path)));
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
         } catch (TransformerConfigurationException ex) {
