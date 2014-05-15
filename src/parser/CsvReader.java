@@ -1,4 +1,5 @@
 package parser;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -15,19 +17,22 @@ import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import neuralnetwork.NeuralNetwork;
+import neuralnetwork.ValuesList;
 
 /**
  * CSV format parser.
- * 
+ *
  * <ul>
- * <li> CSV format is specified by <a href="http://tools.ietf.org/html/rfc4180">RFC 4180</a>.
+ * <li> CSV format is specified by <a
+ * href="http://tools.ietf.org/html/rfc4180">RFC 4180</a>.
  * <li> Each line should end with CRLF (but CR or LF will do too).
- * <li> A line consists of fields delimited with "field separator" (usually a comma).
- * <li> Complex field values, which contain field separators or which span through 
- * multiple lines, could be surrounded with double quotes (or single quotes, or any 
- * other char, depending on configuration).
+ * <li> A line consists of fields delimited with "field separator" (usually a
+ * comma).
+ * <li> Complex field values, which contain field separators or which span
+ * through multiple lines, could be surrounded with double quotes (or single
+ * quotes, or any other char, depending on configuration).
  * </ul>
- * 
+ *
  * @author Vitaliy Garnashevich
  */
 public class CsvReader {
@@ -36,22 +41,21 @@ public class CsvReader {
     public static final char FIELD_SEP_COMMA = ',';
     public static final char FIELD_SEP_TAB = '\t';
     public static final char FIELD_SEP_BAR = '|';
-    
+
     public static final char QUOTE_SINGLE = '\'';
     public static final char QUOTE_DOUBLE = '"';
-    
-    
+
     private final char fieldSep;
     private final char quoteChar;
 
     public CsvReader() {
         this(FIELD_SEP_COMMA, QUOTE_DOUBLE);
     }
-    
+
     public CsvReader(char fieldSeparator) {
         this(fieldSeparator, QUOTE_DOUBLE);
     }
-    
+
     public CsvReader(char fieldSeparator, char quoteChar) {
         this.fieldSep = fieldSeparator;
         this.quoteChar = quoteChar;
@@ -66,48 +70,92 @@ public class CsvReader {
     }
 
     /**
-     * Parse CSV file as a set of {@link Map}s. Note that the first line is required 
-     * to be the header. Header is parsed automatically, in order to know map keys.
-     * <p> Don't forget to close the reader when it is no longer needed.
+     * Parse CSV file as a set of {@link Map}s. Note that the first line is
+     * required to be the header. Header is parsed automatically, in order to
+     * know map keys.
+     * <p>
+     * Don't forget to close the reader when it is no longer needed.
+     *
      * @param path
-     * @return 
+     * @return
      */
     public NeuralNetwork parseAsNetwork(String path) {
+        NeuralNetwork network = null;
         BufferedReader r = null;
         try {
             File file = new File(path);
             r = new BufferedReader(new FileReader(file));
-            Scanner scanner= new Scanner(r);
-            while(true){
+            Scanner scanner = new Scanner(r);
+
             List<String> list = parseNextLine(scanner);
-            Iterator<List<String>> iter = parseAsLists(null);
-            if (!iter.hasNext()) {
-                throw new CsvParserException("CSV header expected");
-            }   List<String> header = iter.next();
+            if (list.size() != 3) {
+                throw new IllegalArgumentException("Недостаточно аргументов для создание нейросети. Необходимо три параметра.");
             }
+            int in = Integer.parseInt(list.get(0));
+            int out = Integer.parseInt(list.get(2));
+            int midd = Integer.parseInt(list.get(1));
+            network = new NeuralNetwork(in, out, midd);
+            parseNextLine(scanner);
+            List<ValuesList> valuesList = new ArrayList<>();
+
+            for (int i = 0; i < in; i++) {
+                list = parseNextLine(scanner);
+                if (list.get(i).equals("")) {
+                    throw new NumberFormatException("Не верный формат весов");
+                }
+                ValuesList vl = new ValuesList();
+
+                for (String string : list) {
+                    vl.add(Double.parseDouble(string));
+                }
+                valuesList.add(vl);
+            }
+            network.setInputWeight(valuesList);
+
+            parseNextLine(scanner);
+            valuesList = new ArrayList<>();
+
+            for (int i = 0; i < out; i++) {
+                list = parseNextLine(scanner);
+                if (list.get(i).equals("")) {
+                    throw new NumberFormatException("Не верный формат весов");
+                }
+                ValuesList vl = new ValuesList();
+
+                for (String string : list) {
+                    vl.add(Double.parseDouble(string));
+                }
+                valuesList.add(vl);
+            }
+            network.setOutputWeight(valuesList);
+
         } catch (IOException ex) {
             Logger.getLogger(CsvReader.class.getName()).log(Level.SEVERE, null, ex);
-        } finally { 
+        } finally {
             try {
                 r.close();
             } catch (IOException ex) {
                 Logger.getLogger(CsvReader.class.getName()).log(Level.SEVERE, null, ex);
             }
-            return new NeuralNetwork();
+            return network;
         }
     }
-    
+
     /**
-     * Parse CSV file as a set of {@link List}s. Note that the first line could be a header.
-     * <p> Don't forget to close the reader when it is no longer needed.
+     * Parse CSV file as a set of {@link List}s. Note that the first line could
+     * be a header.
+     * <p>
+     * Don't forget to close the reader when it is no longer needed.
+     *
      * @param reader
-     * @return 
+     * @return
      */
     public Iterator<List<String>> parseAsLists(Reader reader) {
         return new ListsIterator(reader);
     }
-    
+
     private abstract class AbstractIterator<T> implements Iterator<T> {
+
         private T next;
         private boolean done;
 
@@ -142,9 +190,9 @@ public class CsvReader {
         public void remove() {
             throw new UnsupportedOperationException();
         }
-        
+
     }
-    
+
     private class MapsIterator extends AbstractIterator<Map<String, String>> {
 
         private final Iterator<List<String>> iter;
@@ -162,7 +210,7 @@ public class CsvReader {
             }
             Iterator<String> values = iter.next().iterator();
             Iterator<String> heads = header.iterator();
-            
+
             Map<String, String> result = new LinkedHashMap<String, String>();
             while (heads.hasNext()) {
                 String head = heads.next();
@@ -173,8 +221,9 @@ public class CsvReader {
         }
 
     }
-    
+
     private class ListsIterator extends AbstractIterator<List<String>> {
+
         private final Scanner scanner;
 
         private ListsIterator(Reader reader) {
@@ -185,7 +234,7 @@ public class CsvReader {
         protected List<String> getNext() {
             return parseNextLine(scanner);
         }
-        
+
     }
 
     private List<String> parseNextLine(Scanner scanner) {
@@ -247,39 +296,39 @@ public class CsvReader {
     }
 
     /**
-     * Allows reading by one character. 
-     * Allows "unreading" at most one character.
+     * Allows reading by one character. Allows "unreading" at most one
+     * character.
      */
     private static class Scanner {
-        
+
         private final Reader reader;
         private int ch = -1;
 
         public Scanner(Reader reader) {
             this.reader = reader;
         }
-        
+
         public int read() throws IOException {
             if (ch == -1) {
                 return reader.read();
             }
-            
+
             int result = ch;
             ch = -1;
             return result;
         }
-        
+
         public void unread(int c) {
             if (ch != -1) {
                 throw new IllegalStateException();
             }
             ch = c;
         }
-        
+
         public boolean isEof() throws IOException {
             ch = this.read();
             return ch == -1;
         }
     }
-    
+
 }

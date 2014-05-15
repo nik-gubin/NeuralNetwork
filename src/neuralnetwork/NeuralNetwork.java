@@ -10,6 +10,7 @@ import neuralnetwork.neuron.NeuronsList;
 import neuralnetwork.neuron.Neuron;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import neuralnetwork.activation.ActivationFunction;
 import neuralnetwork.activation.SigmoidActivationFunction;
@@ -76,6 +77,10 @@ public class NeuralNetwork {
 
     }
 
+    public NeuralNetwork(int nInputs, int nOutputs, int nHiddens) {
+        this(nInputs, nOutputs, 1, nHiddens);
+    }
+
     public NeuralNetwork(int nInputs, int nOutputs, int nHiddenLayers, int nPerHiddenLayer) {
         this(nInputs, nOutputs, nHiddenLayers, nPerHiddenLayer, new SigmoidActivationFunction());
     }
@@ -135,6 +140,40 @@ public class NeuralNetwork {
             double value = (i < values.size()) ? values.get(i).doubleValue() : 0.0;
             Neuron inNeuron = inputNeurons.get(i);
             neuronOutputs.put(inNeuron, value);
+        }
+    }
+
+    public void setInputWeight(List<ValuesList> list) {
+        if (list.size() != inputNeurons.size()) {
+            throw new IllegalArgumentException("InputsNeurons");
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).size() != hiddenNeurons.size()) {
+                throw new IllegalArgumentException("Inputs->hidden");
+            }
+            ValuesList valuesList = list.get(i);
+            for (int j = 0; j < valuesList.size(); j++) {
+                Neuron neuron = inputNeurons.get(i);
+                Synapse synapse = neuron.getOutputsSynapse().get(j);
+                synapse.setWeight(valuesList.get(j));
+            }
+        }
+    }
+    
+    public void setOutputWeight(List<ValuesList> list){
+    if (list.size() != outputNeurons.size()) {
+            throw new IllegalArgumentException("InputsNeurons");
+        }
+    for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).size() != hiddenNeurons.size()) {
+                throw new IllegalArgumentException("Inputs->hidden");
+            }
+            ValuesList valuesList = list.get(i);
+            for (int j = 0; j < valuesList.size(); j++) {
+                Neuron neuron = outputNeurons.get(i);
+                Synapse synapse = neuron.getInputsSynapse().get(j);
+                synapse.setWeight(valuesList.get(j));
+            }
         }
     }
 

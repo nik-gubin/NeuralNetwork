@@ -1,10 +1,4 @@
 package app;
-import static java.util.Arrays.*;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import neuralnetwork.NeuralNetwork;
 import parser.CsvReader;
 import parser.CsvWriter;
@@ -23,6 +17,9 @@ public class Test {
         System.out.println(net.toString());
         
         CsvReader parser = new CsvReader();
+        NeuralNetwork neuralNetwork = parser.parseAsNetwork("network.csv");
+        System.out.println();
+        System.out.println(neuralNetwork.toString());
         //NeuralNetwork iter = parser.parseAsNetwork(new StringReader(out.toString()));
 //        while (iter.hasNext()) {
 //            Map<String,String> m=iter.next();

@@ -10,7 +10,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import neuralnetwork.NeuralNetwork;
 import neuralnetwork.neuron.Neuron;
-import neuralnetwork.neuron.Synapse;
 
 /**
  * CSV format writer.

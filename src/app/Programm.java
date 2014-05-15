@@ -66,6 +66,7 @@ public class Programm extends javax.swing.JFrame {
         jMenuItemOpen = new javax.swing.JMenuItem();
         jMenuItemSave = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         jFileChooser.setFileFilter(new MyFilter());
         jFileChooser.addActionListener(new java.awt.event.ActionListener() {
@@ -285,6 +286,15 @@ public class Programm extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Редактировать");
+
+        jMenuItem1.setText("Распознавание");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -307,7 +317,18 @@ public class Programm extends javax.swing.JFrame {
         int returnVal = jFileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             String path = jFileChooser.getSelectedFile().getAbsolutePath();
-
+            if (path.endsWith(".xml")) {
+                throw new UnsupportedOperationException("Открытие xml");
+            } else if (path.endsWith(".csv")) {
+                CsvParser cp = new CsvParser(path);
+                neuralNetwork = cp.getNetwork();
+                jButtonCreateNeuron.setEnabled(false);
+                jPanelNewNetwork.setVisible(true);
+                jPanelTrainNetwork.setVisible(true);
+                jPanelTrainNetwork.setEnabled(true);
+                jPanelTestingNetwork.setVisible(true);
+                jPanelTestingNetwork.setEnabled(true);
+            }
         }
     }//GEN-LAST:event_jMenuItemOpenActionPerformed
 
@@ -322,10 +343,11 @@ public class Programm extends javax.swing.JFrame {
                 XMLParser lParser = new XMLParser(path);
                 lParser.setNetwork(neuralNetwork);
             } else if (path.endsWith(".csv")) {
-                CsvParser cp =new CsvParser(path);
+                CsvParser cp = new CsvParser(path);
                 cp.setNetwork(neuralNetwork);
+                System.out.println("");
             }
-           
+
         }
     }//GEN-LAST:event_jMenuItemSaveActionPerformed
 
@@ -392,6 +414,11 @@ public class Programm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jFileChooserActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        NumberPaint np = new NumberPaint();
+        np.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -447,6 +474,7 @@ public class Programm extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItemNew;
     private javax.swing.JMenuItem jMenuItemOpen;
     private javax.swing.JMenuItem jMenuItemSave;

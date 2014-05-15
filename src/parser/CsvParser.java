@@ -31,4 +31,6 @@ public class CsvParser implements NetworkParser {
         cw.write(nn);
     }
 
+    
+
 }
