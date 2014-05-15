@@ -15,7 +15,10 @@ import java.util.List;
 import neuralnetwork.activation.ActivationFunction;
 import neuralnetwork.activation.SigmoidActivationFunction;
 
-
+/**
+ *
+ * @author Николай
+ */
 public class NeuralNetwork {
 
     public NeuronsList inputNeurons;
